@@ -67,25 +67,8 @@ Given a string s, return s reversed.
 Example: reverse("apples🍎 and bananas🍌") = "🍌sananab dna 🍎selppa")
 */
 UStr reverse(UStr s) {
-	// plan:
-	// loop from first utf8 index to the last
-	// fill result from back to front
-	UStr result = new_ustr(s.contents);
-	int8_t utf8_cp;
-	uint32_t i_backward = result.bytes;
-	for (uint32_t i = 0; i < result.bytes; ++i) {
-		// get codepoint
-		utf8_cp = utf8_codepoint_size(s.contents[i]);
-		// backward index must be shifted first
-		i_backward -= utf8_cp;
-		// assign using offset
-		for (uint32_t offset = 0; offset < utf8_cp; ++offset) {
-			result.contents[i_backward + offset] = s.contents[i + offset];
-		}
-		// move by codepint value to next utf8 character
-		i += utf8_cp;
-	}
-	return result;
+	// TODO: implement this
+
 }
 
 
