@@ -37,8 +37,61 @@ and ending at index end (exclusive).
 Returns an empty string on invalid range.
 */
 UStr substring(UStr s, int32_t start, int32_t end) {
-	// TODO: implement this
-
+	char buf[100];
+	buf[0]='\0';
+	if((start<0)|(end>s.codepoints)|(start>end)){
+		return new_ustr(buf);
+	}	
+	int i=0,ibuf=0, icode=0;
+	char t;
+	while(!(ibuf>=end)){
+		t=s.contents[i];
+		if(utf8_codepoint_size(t)==1){
+			if(icode>=start){
+			//printf("size 1\n");
+			buf[ibuf]=t;
+			ibuf++;}
+			i++;
+			icode++;
+		}
+		else if(utf8_codepoint_size(t)==2){
+			if(icode>=start){
+			//printf("size 2\n");
+			buf[ibuf]=t;
+			buf[ibuf+1]=s.contents[i+1];
+			//printf("rest of string: %s\n", &buf[ibuf]);
+                        ibuf+=2;}
+                        i+=2;
+			icode++;
+		}
+		else if(utf8_codepoint_size(t)==3){
+			if(icode>=start){
+			//printf("size 3\n");
+			buf[ibuf]=t;
+                        buf[ibuf+1]=s.contents[i+1];
+                        buf[ibuf+2]=s.contents[i+2];
+			ibuf+=3;}
+                        i+=3;
+			icode++;
+		}	
+		else if(utf8_codepoint_size(t)==4){
+			if(icode>=start){
+			//printf("size 4\n");
+			buf[ibuf]=t;
+                        buf[ibuf+1]=s.contents[i+1];
+                        buf[ibuf+2]=s.contents[i+2];
+                        buf[ibuf+3]=s.contents[i+3];
+			ibuf+=4;}
+                        i+=4;
+			icode++;
+		}
+		else if(utf8_codepoint_size(t)==-1){
+			printf("something went wrong\n");
+			break;
+		}
+	}
+	buf[ibuf]='\0';
+	return new_ustr(buf);
 }
 
 /*
@@ -67,25 +120,8 @@ Given a string s, return s reversed.
 Example: reverse("apples🍎 and bananas🍌") = "🍌sananab dna 🍎selppa")
 */
 UStr reverse(UStr s) {
-	// plan:
-	// loop from first utf8 index to the last
-	// fill result from back to front
-	UStr result = new_ustr(s.contents);
-	int8_t utf8_cp;
-	uint32_t i_backward = result.bytes;
-	for (uint32_t i = 0; i < result.bytes; ++i) {
-		// get codepoint
-		utf8_cp = utf8_codepoint_size(s.contents[i]);
-		// backward index must be shifted first
-		i_backward -= utf8_cp;
-		// assign using offset
-		for (uint32_t offset = 0; offset < utf8_cp; ++offset) {
-			result.contents[i_backward + offset] = s.contents[i + offset];
-		}
-		// move by codepint value to next utf8 character
-		i += utf8_cp;
-	}
-	return result;
+	// TODO: implement this
+
 }
 
 
